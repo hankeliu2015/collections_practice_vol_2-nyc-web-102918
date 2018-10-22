@@ -45,30 +45,38 @@ def remove_non_strings(array)
 end
 
 
-
 #   count how many times something appears in an array
-#   David Kennell helped the following code:
 
 def count_elements(array)
 
-  count_result = []
-  names = []
   array.each do |element|
-    if !array.include?(element[:name]) # the condition is not doing the job?
-  binding.pry
-      names << element[:name]
-      count_result << {count: 1, name: element[:name]}
-    else
-
-      hash_to_change = count_result.select{|hash| hash.name == element[:name]} # this will return blake after iterate to the second blake.
-      hash_to_change[:count] += 1 # how to get it back to count_result.
-    end
-  end
-  return count_result
+    element[:count] = 0
+    element_name = element[:name]
+      array.each do |hash|
+        if hash[:name] == element_name
+          element[:count] += 1
+        end
+      end
+  end.uniq  # sort out the duplicate hash
 
 end
 
+
+#   David Kennell helped the following code:
+# count_result = []
+# names = []
+#     if !array.include?(element[:name]) # the condition is not doing the job?
+# binding.pry
+#       # names << element[:name]
+#       count_result << {count: 1, name: element[:name]}
+#     else
+# binding.pry
+#       hash_to_change = count_result.select{|hash| hash.name == element[:name]} # this will return blake after iterate to the second blake.
+#       hash_to_change[:count] += 1 # how to get it back to count_result.
+#   # return count_result
+
 # my code for count_elements with errors:
+
 # i = 0
 # count_result = []
 
@@ -88,9 +96,20 @@ end
   # i += 1
 
  #   combines two nested data structures into one
- # def  merge_data(hash1, hash2)
- #   # what kind of data structures need to merge?
- # end
+ def  merge_data(hash1, hash2)
+   merged_data_array = []
+
+   hash1.each do |element1|
+         name = element1[:first_name] #the iteration give the first array element.
+
+         hash2.each do |element2|
+           merged_hash = element2[name] # name is "blake", this is the blake's Hash data  in hash 2
+           merged_hash[:first_name] = name # this add the :first_name => blake
+           merged_data_array.push(merged_hash)
+         end
+   end
+   merged_data_array
+end
 
 
  #   find all cool hashes
@@ -107,5 +126,20 @@ def find_cool(array)
   cool_array
 end
 
- # #organize_schools
+
  #   organizes the schools by location
+def organize_schools(schools)
+  organize_schools = {}
+
+  schools.each do |school_name, location_hash|
+          location = location_hash[:location] # school name will fell under the same location key.
+
+          if !organize_schools[location].kind_of?(Array)
+            organize_schools[location] = []     #need an condition to set the array before using push
+            organize_schools[location].push(school_name)
+          else
+            organize_schools[location].push(school_name) # If the array already exist, just push it.
+          end
+  end
+  organize_schools
+end
